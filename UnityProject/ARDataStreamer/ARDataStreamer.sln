@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{7c83e654-c42e-f716-14ed-42db7ee816a7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ARFoundationRemote.Installer", "ARFoundationRemote.Installer.csproj", "{7b648e9e-2e4c-4b39-0655-30ff8de09851}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ARFoundationRemote.Installer.Editor", "ARFoundationRemote.Installer.Editor.csproj", "{e170c8f9-4518-21e1-b7f5-27bac4256f51}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7c83e654-c42e-f716-14ed-42db7ee816a7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7c83e654-c42e-f716-14ed-42db7ee816a7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7c83e654-c42e-f716-14ed-42db7ee816a7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7c83e654-c42e-f716-14ed-42db7ee816a7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7b648e9e-2e4c-4b39-0655-30ff8de09851}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7b648e9e-2e4c-4b39-0655-30ff8de09851}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7b648e9e-2e4c-4b39-0655-30ff8de09851}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7b648e9e-2e4c-4b39-0655-30ff8de09851}.Release|Any CPU.Build.0 = Release|Any CPU
+		{e170c8f9-4518-21e1-b7f5-27bac4256f51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{e170c8f9-4518-21e1-b7f5-27bac4256f51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{e170c8f9-4518-21e1-b7f5-27bac4256f51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{e170c8f9-4518-21e1-b7f5-27bac4256f51}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
