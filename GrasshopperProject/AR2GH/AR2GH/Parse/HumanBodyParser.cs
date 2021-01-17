@@ -1,12 +1,13 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using AR2GH.DataTypes;
 
 namespace AR2GH.Parse
 {
     /// <summary>
-    /// Parse the AR-Foundation human body sceleton.
+    /// Generates <see cref="HumanBody"/> from a byte array.
     /// </summary>
-    class HumanBodyParser
+    public static class HumanBodyParser
     {
         public static void ParseHumanBodyUpdates(byte[] rawData, int startIndex, ref ConcurrentDictionary<ulong, HumanBody> receivedBodies)
         {

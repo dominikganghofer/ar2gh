@@ -26,12 +26,9 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Rhino.Geometry;
 using Rhino;
 using Rhino.DocObjects;
-using Grasshopper.Kernel.Data;
 
 namespace AR2GH
 {

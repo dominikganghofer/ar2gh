@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using UnityEditor;
-using UnityEngine;
 using UnityEngine.XR.ARFoundation;
-using UnityEngine.XR.ARSubsystems;
 
-namespace ar2gh
+namespace ar2gh.plane
 {
+    /// <summary>
+    /// Serializes detected planes
+    /// </summary>
     public static class PlaneSerializer
     {
         public static byte[] GeneratePlaneData(
@@ -17,19 +15,19 @@ namespace ar2gh
         {
             // preprocess planes
             var added = arPlanesChangedEventArgs.added
-                .Select(a => SerializableARPlane.FromNativeARPlane(a, planeManager))
+                .Select(a => PlaneData.FromNativeARPlane(a, planeManager))
                 .Where(plane => plane.HasValue)
                 .Select(nullable => nullable.Value)
                 .ToList();
 
             var removed = arPlanesChangedEventArgs.removed
-                .Select(a => SerializableARPlane.FromNativeARPlane(a, planeManager))
+                .Select(a => PlaneData.FromNativeARPlane(a, planeManager))
                 .Where(plane => plane.HasValue)
                 .Select(nullable => nullable.Value)
                 .ToList();
 
             var updated = arPlanesChangedEventArgs.updated
-                .Select(a => SerializableARPlane.FromNativeARPlane(a, planeManager))
+                .Select(a => PlaneData.FromNativeARPlane(a, planeManager))
                 .Where(plane => plane.HasValue)
                 .Select(nullable => nullable.Value)
                 .ToList();
@@ -52,10 +50,9 @@ namespace ar2gh
             return data;
         }
 
-        private static int CalculateSizeForPlanes(List<SerializableARPlane> added)
+        private static int CalculateSizeForPlanes(List<PlaneData> added)
         {
-            var sizeForPlanes = 0;
-            sizeForPlanes += sizeof(int); // planeCount
+            var sizeForPlanes = sizeof(int); // planeCount
             foreach (var p in added)
             {
                 sizeForPlanes += sizeof(ulong); // planeID
@@ -68,7 +65,7 @@ namespace ar2gh
             return sizeForPlanes;
         }
 
-        private static void WritePlanes(List<SerializableARPlane> added, ref byte[] data, ref int dstOffSet)
+        private static void WritePlanes(List<PlaneData> added, ref byte[] data, ref int dstOffSet)
         {
             SerializationHelper.WriteInt(added.Count, ref data, ref dstOffSet);
             foreach (var a in added)

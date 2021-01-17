@@ -1,27 +1,24 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
-namespace ar2gh
+namespace ar2gh.camera
 {
     /// <summary>
-    /// Access ar device camera image 
+    /// Async access of the ar device camera image
     /// </summary>
     public class CameraImageReceiver : MonoBehaviour
     {
-        [SerializeField]
-        ARCameraManager _cameraManager = null;
+        [SerializeField] ARCameraManager _cameraManager = null;
 
-        [SerializeField]
-        private Material _debugMaterial = null;
+        [SerializeField] private Material _debugMaterial = null;
 
-        [SerializeField]
-        private Texture2D _fallbackTexture = null;
+        [SerializeField] private Texture2D _fallbackTexture = null;
 
-        private Texture2D _receivedTexture = null;
+        private Texture2D _receivedTexture;
+        private Texture2D _rbgaTexture;
 
         /// <summary>
         /// Reads the latest image from the AR device and invokes callback when done.
@@ -83,7 +80,5 @@ namespace ar2gh
             callback.Invoke(_rbgaTexture);
             request.Dispose();
         }
-
-        private Texture2D _rbgaTexture;
     }
 }

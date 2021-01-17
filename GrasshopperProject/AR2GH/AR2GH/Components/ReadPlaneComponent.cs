@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Grasshopper;
-using Grasshopper.Kernel ;
-using Grasshopper.Kernel.Data;
+using Grasshopper.Kernel;
 using Rhino.Geometry;
 
-namespace AR2GH
+namespace AR2GH.Components
 {
+    /// <summary>
+    /// Reads the received planes detected in the enviroment into GH data types.
+    /// </summary>
     public class ReadPlaneComponent : GH_Component
     {
         public ReadPlaneComponent()
@@ -30,26 +31,6 @@ namespace AR2GH
             pManager.AddBrepParameter("Seat", "Seat", "Seat", GH_ParamAccess.list);
             pManager.AddBrepParameter("Door", "Door", "Door", GH_ParamAccess.list);
             pManager.AddBrepParameter("Window", "Window", "Window", GH_ParamAccess.list);
-        }
-
-        private  Brep PlaneToBrep(Plane plane)
-        {
-            var boundary = plane.Boundary;
-            if (boundary.Count == 0)
-                return null;
-
-            var polyline = Curve.CreateControlPointCurve(boundary, 1);
-            var tolerance = Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance;
-
-            var breps = Brep.CreatePlanarBreps(polyline, tolerance);
-            if (breps == null)
-                return null;
-
-            if (breps.Length != 1)
-            {
-                this.AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Created more or less than one brep.");
-            }
-            return breps[0];
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -82,5 +63,24 @@ namespace AR2GH
         protected override System.Drawing.Bitmap Icon => Properties.Resources.planes;
 
         public override Guid ComponentGuid => new Guid("252aba39-2df8-4133-811e-b684759f15b2");
+   
+        private  Brep PlaneToBrep(Plane plane)
+        {
+            var boundary = plane.Boundary;
+            if (boundary.Count == 0)
+                return null;
+
+            var polyline = Curve.CreateControlPointCurve(boundary, 1);
+            var tolerance = Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance;
+
+            var breps = Brep.CreatePlanarBreps(polyline, tolerance);
+            if (breps == null)
+                return null;
+
+            if (breps.Length != 1)
+                this.AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Created more or less than one brep.");
+            
+            return breps[0];
+        }
     }
 }

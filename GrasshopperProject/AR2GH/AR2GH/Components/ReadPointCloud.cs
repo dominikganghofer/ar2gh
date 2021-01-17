@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Grasshopper;
 using Grasshopper.Kernel;
-using Grasshopper.Kernel.Data;
-using Rhino.Geometry;
 
-namespace AR2GH
+namespace AR2GH.Components
 {
+    /// <summary>
+    /// Translates the point cloud detected in the enviroment into GH data types.
+    /// </summary>
     public class ReadPointCloud : GH_Component
     {
         public ReadPointCloud()

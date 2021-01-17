@@ -1,8 +1,11 @@
 using UnityEngine;
 
-namespace ar2gh
+namespace ar2gh.camera
 {
-    public class CameraSerializer
+    /// <summary>
+    /// Serialize info on the ar camera
+    /// </summary>
+    public static class CameraSerializer
     {
         public static byte[] SerializeCameraInfo(Transform camTransform, float fov)
         {

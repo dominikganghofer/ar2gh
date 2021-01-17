@@ -16,7 +16,7 @@ namespace AR2GH.Parse
         public enum StreamType { CameraInfo = 0, Planes = 1, HumanBody = 2, Mesh = 3, LidarPointCloud = 4 }
 
         public ConcurrentPointCloud ReceivedPointCloud = new ConcurrentPointCloud();
-        public ConcurrentDictionary<ulong, Plane> ReceivedPlanes = new ConcurrentDictionary<ulong, Plane>();
+        public ConcurrentDictionary<ulong, ARPlane> ReceivedPlanes = new ConcurrentDictionary<ulong, ARPlane>();
         public ConcurrentDictionary<ulong, HumanBody> ReceivedBodies = new ConcurrentDictionary<ulong, HumanBody>();
         public ConcurrentDictionary<int, Mesh> ReceivedMeshes = new ConcurrentDictionary<int, Mesh>();
         public ConcurrentQueue<(Point3d, Color)> LidarPointCloud = new ConcurrentQueue<(Point3d, Color)>();
@@ -85,7 +85,7 @@ namespace AR2GH.Parse
         }
 
         /// <summary>
-        /// Stored the data chunks that make up a message received via network.
+        /// Stores the data chunks that make up a message received via network.
         /// </summary>
         private class Message
         {
@@ -123,6 +123,5 @@ namespace AR2GH.Parse
                 return message.ToArray();
             }
         }
-
     }
 }

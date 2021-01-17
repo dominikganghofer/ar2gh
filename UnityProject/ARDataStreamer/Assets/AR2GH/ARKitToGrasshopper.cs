@@ -1,121 +1,118 @@
 ﻿using System.Net;
-using ar2gh;
+using ar2gh.camera;
+using ar2gh.humanBody;
+using ar2gh.lidar;
+using ar2gh.mesh;
+using ar2gh.plane;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 
-public class ARKitToGrasshopper : MonoBehaviour
+namespace ar2gh
 {
-    [SerializeField]
-    private Toggle _lidarOrMeshToggle = default;
-
-    [SerializeField]
-    private TMP_InputField _receiverIPInputField = null;
-
-    [SerializeField]
-    private PointCloudView _pointCloudView = null;
-
-    [SerializeField]
-    private Button _connectButton = null;
-
-    [SerializeField]
-    private LidarPointCloud _lidarPointCloud = null;
-
-    [SerializeField]
-    private ARHumanBodyManager _humanBodyManager = null;
-
-    [SerializeField]
-    private ARCameraManager _cameraManager = null;
-
-    [SerializeField]
-    private ARMeshManager _meshManager = null;
-
-    [SerializeField]
-    private ARPlaneManager _planeManger = null;
-
-//    [SerializeField]
-//    private ARPointCloudManager _pointCloudManager = null;
-//
-//    [SerializeField]
-//    private PointCloudSender _pointCloudSender = null;
-
-    [SerializeField]
-    private MeshSender _meshSender = null;
-
-    private readonly LidarPointCloudSerializer _lidarSerializer = new LidarPointCloudSerializer();
-
-    private UDPConnection _udpConnection;
-
-    private void Start()
+    /// <summary>
+    /// Main Controller. Registers at ARKit components and sends updates to Grasshopper via <see cref="UDPConnection"/>.
+    /// Has a toggle to decide if the lidar point cloud or the environment mesh should be send. 
+    /// </summary>
+    public class ARKitToGrasshopper : MonoBehaviour
     {
-        _udpConnection = new UDPConnection();
-        _udpConnection.StartSender(IPAddress.Parse(UDPConnection.DefaultReceiverIP));
+        [Header("UI Components")] [SerializeField]
+        private Toggle _lidarOrMeshToggle = default;
 
-        _connectButton.onClick.AddListener(ConnectButtonClickedHandler);
-        _receiverIPInputField.text = IPAddress.Parse(UDPConnection.DefaultReceiverIP).ToString();
+        [SerializeField] private TMP_InputField _receiverIPInputField = null;
 
-        // register to ar foundation components
-        _lidarPointCloud.CloudUpdateEvent += SendLidarPointCloudUpdate;
-        _meshManager.meshesChanged += MeshChangedHandler;
-        _planeManger.planesChanged += PlanesChangedHandler;
-        //_cameraManager.frameReceived += CameraChangedHandler;
-        _meshSender.DataReadyEvent += _udpConnection.Send;
+        [SerializeField] private Button _connectButton = null;
 
-        // human bodies cannot be detected simultaneously with the depth map. todo: add feature switch 
-        // _humanBodyManager.humanBodiesChanged += HumanBodyChangedHandler;
+        [Header("AR Components")] [SerializeField]
+        private LidarPointCloud _lidarPointCloud = null;
 
-        // sending of feature points is replaced with lidar point cloud
-        //_pointCloudManager.pointCloudsChanged += _pointCloudSender.PointCloudChangedHandler;
-        //_pointCloudSender.PackageReadyEvent += Send;
-    }
+        [SerializeField] private ARHumanBodyManager _humanBodyManager = null;
 
-    private void CameraChangedHandler(ARCameraFrameEventArgs e)
-    {
-        var fov = e.projectionMatrix != null
-            ? 2 * Mathf.Atan(1f / e.projectionMatrix.Value.m11) * 180 / Mathf.PI
-            : 0f;
+        [SerializeField] private ARCameraManager _cameraManager = null;
 
-        var data = CameraSerializer.SerializeCameraInfo(_cameraManager.transform, fov);
-        _udpConnection.Send(data);
-    }
+        [SerializeField] private ARMeshManager _meshManager = null;
 
-    private void MeshChangedHandler(ARMeshesChangedEventArgs obj)
-    {
-        if (!_lidarOrMeshToggle.isOn)
-            return;
+        [SerializeField] private ARPlaneManager _planeManger = null;
 
-        _meshSender.MeshesChangedHandler(obj);
-    }
+        [FormerlySerializedAs("_pointCloudView")] [SerializeField] private LidarPointCloudView _lidarPointCloudView = null;
 
-    private void SendLidarPointCloudUpdate(LidarPointCloud.CloudPoint[] cloud)
-    {
-        if (_lidarOrMeshToggle.isOn)
-            return;
+        [SerializeField] private MeshSender _meshSender = null;
 
-        _pointCloudView.RenderVertices(cloud);
-        var data = _lidarSerializer.Serialize(cloud);
-        foreach (var package in data)
+        private readonly LidarPointCloudSerializer _lidarSerializer = new LidarPointCloudSerializer();
+
+        private UDPConnection _udpConnection;
+
+        private void Start()
         {
-            _udpConnection.Send(package);
+            _udpConnection = new UDPConnection();
+            _udpConnection.StartSender(IPAddress.Parse(UDPConnection.DefaultReceiverIP));
+
+            _connectButton.onClick.AddListener(ConnectButtonClickedHandler);
+            _receiverIPInputField.text = IPAddress.Parse(UDPConnection.DefaultReceiverIP).ToString();
+
+            // register to ar foundation components
+            _meshManager.meshesChanged += MeshChangedHandler;
+            _planeManger.planesChanged += PlanesChangedHandler;
+            _lidarPointCloud.CloudUpdateEvent += SendLidarPointCloudUpdate;
+            _meshSender.DataReadyEvent += _udpConnection.Send;
+
+            // bandwidth is too small to send all data simultaneously
+            // todo: add possibility to switch between the ar components
+            //_cameraManager.frameReceived += CameraChangedHandler;
+            //_humanBodyManager.humanBodiesChanged += HumanBodyChangedHandler;
         }
-    }
 
-    private void ConnectButtonClickedHandler()
-    {
-        var ip = _receiverIPInputField.text;
-        _udpConnection.StartSender(IPAddress.Parse(ip));
-    }
+        private void CameraChangedHandler(ARCameraFrameEventArgs e)
+        {
+            var isCameraInitialized = e.projectionMatrix != null;
+            var fov = isCameraInitialized
+                ? 2 * Mathf.Atan(1f / e.projectionMatrix.Value.m11) * 180 / Mathf.PI
+                : 0f;
 
-    private void HumanBodyChangedHandler(ARHumanBodiesChangedEventArgs e)
-    {
-        var data = HumanBodySerializer.GenerateHumanBodyUpdateData(e);
-        _udpConnection.Send(data);
-    }
+            var data = CameraSerializer.SerializeCameraInfo(_cameraManager.transform, fov);
+            _udpConnection.Send(data);
+        }
 
-    private void PlanesChangedHandler(ARPlanesChangedEventArgs e)
-    {
-        var data = PlaneSerializer.GeneratePlaneData(e, _planeManger);
-        _udpConnection.Send(data);
+        private void MeshChangedHandler(ARMeshesChangedEventArgs e)
+        {
+            if (!_lidarOrMeshToggle.isOn)
+                return;
+
+            _meshSender.SendUpdate(e.added, e.updated, e.removed);
+        }
+
+        private void SendLidarPointCloudUpdate(LidarPoint[] cloud)
+        {
+            if (_lidarOrMeshToggle.isOn)
+                return;
+
+            _lidarPointCloudView.RenderVertices(cloud);
+
+            var data = _lidarSerializer.Serialize(cloud);
+            foreach (var package in data)
+            {
+                _udpConnection.Send(package);
+            }
+        }
+
+        private void ConnectButtonClickedHandler()
+        {
+            var ip = _receiverIPInputField.text;
+            _udpConnection.StartSender(IPAddress.Parse(ip));
+        }
+
+        private void HumanBodyChangedHandler(ARHumanBodiesChangedEventArgs e)
+        {
+            var data = HumanBodySerializer.GenerateHumanBodyUpdateData(e);
+            _udpConnection.Send(data);
+        }
+
+        private void PlanesChangedHandler(ARPlanesChangedEventArgs e)
+        {
+            var data = PlaneSerializer.GeneratePlaneData(e, _planeManger);
+            _udpConnection.Send(data);
+        }
     }
 }

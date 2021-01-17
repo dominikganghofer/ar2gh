@@ -5,9 +5,9 @@ using Rhino.Geometry;
 namespace AR2GH.Parse
 {
     /// <summary>
-    /// A helper that handles parsing data types.
+    /// A helperfor parsing different data types.
     /// </summary>
-    public class ParserHelper
+    public static class ParserHelper
     {
         public static StreamParser.StreamType ToStreamType(ref byte[] rawData, ref int startIndex)
         {

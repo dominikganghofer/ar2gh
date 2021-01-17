@@ -4,8 +4,11 @@ using Grasshopper.Kernel.Data;
 using System;
 using System.Collections.Generic;
 
-namespace AR2GH
+namespace AR2GH.Components
 {
+    /// <summary>
+    /// Translates the received human bodies into GH data types.
+    /// </summary>
     public class ReadHumanBodyComponent : GH_Component
     {
         public ReadHumanBodyComponent()

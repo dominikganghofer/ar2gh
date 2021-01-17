@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ar2gh
 {
-    public class SerializationHelper
+    public static class SerializationHelper
     {
         public enum StreamType
         {

@@ -1,8 +1,11 @@
 ﻿using Rhino.Geometry;
 using System.Collections.Generic;
 
-namespace AR2GH
+namespace AR2GH.DataTypes
 {
+    /// <summary>
+    /// Data structure for a human body that consists of a list of <see cref="Joint"/>s.
+    /// </summary>
     public struct HumanBody
     {
         public ulong ID1 { get; internal set; }
@@ -10,6 +13,9 @@ namespace AR2GH
         public List<Joint> joints;
     }
 
+    /// <summary>
+    /// Data structure the joint of a <see cref="HumanBody"/> with positon and rotation.
+    /// </summary>
     public struct Joint
     {
         public int ID;

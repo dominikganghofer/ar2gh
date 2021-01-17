@@ -6,9 +6,9 @@ using System.Drawing;
 namespace AR2GH.Parse
 {
     /// <summary>
-    /// Parse AR-Foundation enviroment mesh
+    /// Generates <see cref="Mesh"/> updates from a byte array.
     /// </summary>
-    class MeshParser
+    public static class MeshParser
     {
         public static void ParseMeshUpdates(byte[] rawData, int startIndex, ref ConcurrentDictionary<int, Mesh> receivedMeshes)
         {

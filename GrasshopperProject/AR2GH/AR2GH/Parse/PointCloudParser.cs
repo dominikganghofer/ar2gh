@@ -1,10 +1,14 @@
-﻿using Rhino.Geometry;
+﻿using AR2GH.DataTypes;
+using Rhino.Geometry;
 using System.Collections.Concurrent;
 using System.Drawing;
 
 namespace AR2GH.Parse
 {
-    class PointCloudParser
+    /// <summary>
+    /// Generates entries of <see cref="ConcurrentPointCloud"/> from a byte array.
+    /// </summary>
+    public static class PointCloudParser
     {
         /// <summary>
         /// Parse the AR-Foundation feature point cloud. 
@@ -15,10 +19,10 @@ namespace AR2GH.Parse
         public static void ParseFeaturePointCloud(byte[] rawData, int startIndex, ref ConcurrentPointCloud receivedPointCloud)
         {
             // read header
-            var CamPosition = ParserHelper.ToCartesianVectorMMPrecision(rawData, ref startIndex);
-            var CamRotationEulerAngles = ParserHelper.ToCartesianVectorMMPrecision(rawData, ref startIndex);
-            var TouchPosition = ParserHelper.ToVector2D(rawData, ref startIndex);
-            var TouchDelta = ParserHelper.ToVector2D(rawData, ref startIndex);
+            var camPosition = ParserHelper.ToCartesianVectorMMPrecision(rawData, ref startIndex);
+            var camRotationEulerAngles = ParserHelper.ToCartesianVectorMMPrecision(rawData, ref startIndex);
+            var touchPosition = ParserHelper.ToVector2D(rawData, ref startIndex);
+            var touchDelta = ParserHelper.ToVector2D(rawData, ref startIndex);
             var pointCount = ParserHelper.ToInt(rawData, ref startIndex);
 
             //read points
@@ -46,16 +50,16 @@ namespace AR2GH.Parse
         /// <param name="startIndex"></param>
         /// <param name="lidarPointCloud"></param>
         public static void ParseDepthMapPointCloud(
-            byte[] rawData, 
-            int startIndex, 
-            ref ConcurrentQueue<(Point3d,Color)> lidarPointCloud)
+            byte[] rawData,
+            int startIndex,
+            ref ConcurrentQueue<(Point3d, Color)> lidarPointCloud)
         {
             var pointCount = ParserHelper.ToInt(rawData, ref startIndex);
             for (var i = 0; i < pointCount; i++)
             {
                 var p = ParserHelper.ToCartesianVectorCMPrecision(rawData, ref startIndex);
                 var color = ParserHelper.ToColor(rawData, ref startIndex);
-                lidarPointCloud.Enqueue((p,color));
+                lidarPointCloud.Enqueue((p, color));
             }
         }
     }

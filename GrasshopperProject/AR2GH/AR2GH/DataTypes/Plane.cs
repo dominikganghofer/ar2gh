@@ -1,13 +1,13 @@
 ﻿using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AR2GH
+namespace AR2GH.DataTypes
 {
-    public struct Plane
+    /// <summary>
+    /// Data structure for a detected ar plane.
+    /// </summary>
+    public struct ARPlane
     {
         public ulong ID;
         public List<Point3d> Boundary;
@@ -43,7 +43,6 @@ namespace AR2GH
             None, Wall, Floor, Ceiling, Table, Seat, Door, Window
         }
 
-
         public static Classification ClassificationFromInt(int value)
         {
             switch (value)
@@ -69,7 +68,4 @@ namespace AR2GH
             }
         }
     }
-
-
-
 }

@@ -4,11 +4,14 @@ using System.Collections.Generic;
 
 namespace AR2GH.Parse
 {
+    /// <summary>
+    /// Generates <see cref="Plane"/> updates from a byte array.
+    /// </summary>
     public class PlaneParser
     {
         public static void ParsePlaneUpdates(byte[] rawData, int startIndex, ref ConcurrentDictionary<ulong, Plane> receivedPlanes)
         {
-            var addedCount = ParserHelper.ToInt( rawData, ref startIndex);
+            var addedCount = ParserHelper.ToInt(rawData, ref startIndex);
             for (var iPlane = 0; iPlane < addedCount; iPlane++)
             {
                 var addedPlane = ParsePlane(rawData, ref startIndex);
@@ -31,7 +34,7 @@ namespace AR2GH.Parse
             }
         }
 
-        private static Plane ParsePlane( byte[] rawData, ref int startIndex)
+        private static Plane ParsePlane(byte[] rawData, ref int startIndex)
         {
             var plane = new Plane();
 

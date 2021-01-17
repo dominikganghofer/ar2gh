@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/AR2GH/Streamer.unity
+    path: Assets/ar2gh/main.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 0
     path: Assets/Plugins/ARFoundationRemoteInstaller/Scenes/ARCompanion/ARCompanion.unity

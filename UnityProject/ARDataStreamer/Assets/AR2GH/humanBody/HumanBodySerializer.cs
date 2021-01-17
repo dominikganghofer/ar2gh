@@ -1,11 +1,12 @@
-using System;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
-namespace ar2gh
+namespace ar2gh.humanBody
 {
-    public class HumanBodySerializer
+    /// <summary>
+    /// Serialize detected human bodies (ids & joints)  
+    /// </summary>
+    public static class HumanBodySerializer
     {
         public static byte[] GenerateHumanBodyUpdateData(ARHumanBodiesChangedEventArgs e)
         {

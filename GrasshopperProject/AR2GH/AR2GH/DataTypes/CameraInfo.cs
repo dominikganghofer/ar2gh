@@ -8,7 +8,11 @@ using System.Drawing;
 
 namespace AR2GH.DataTypes
 {
-    public class CameraInfo// : IGH_Goo, IGH_PreviewData
+    /// <summary>
+    /// GH data object for the ar camera info.
+    /// </summary>
+    public class CameraInfo
+    // todo:  Make this class a IGH_Goo, IGH_PreviewData to render it in the scene view
     {
         public Point3d Position;
         public Vector3d RotationEuler;
@@ -42,7 +46,6 @@ namespace AR2GH.DataTypes
 
         public bool Write(GH_IWriter writer) => false;
 
-
         public void DrawViewportMeshes(GH_PreviewMeshArgs args)
         {
             DrawFrustum((line, c) => args.Pipeline.DrawLine(line, c));
@@ -67,8 +70,6 @@ namespace AR2GH.DataTypes
             c =Color.FromArgb(100, Color.White);
             t = Transform.RotationZYX(-x, y, z);
             Draw(c, t, Position, w, size, draw);
-
-
         }
 
         static void Draw(Color c, Transform t, Point3d pos, double w, double size, Action<Line, Color> draw)
@@ -87,7 +88,6 @@ namespace AR2GH.DataTypes
             draw(new Line(pos, p1), c);
             draw(new Line(pos, p2), c);
             draw(new Line(pos, p3), c);
-
         }
     }
 }
